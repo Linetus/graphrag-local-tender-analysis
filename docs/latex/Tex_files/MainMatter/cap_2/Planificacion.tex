@@ -1,0 +1,129 @@
+﻿\chapter{Análisis de Requisitos}
+\label{chap:requisitos}
+
+En este capítulo se establecen los requisitos que la solución de software propuesta debe satisfacer. Estos se dividen en dos categorías principales: los requisitos funcionales, que describen las funcionalidades y capacidades que el sistema debe ofrecer (el <<qué>>), y los requisitos no funcionales, que definen los atributos de calidad, restricciones y características operativas del sistema (el <<cómo de bien>>).
+
+\section{Requisitos Funcionales (RF)}
+\label{sec:rf}
+
+Los requisitos funcionales del sistema se han agrupado en tres categorías principales que se corresponden con las fases lógicas del flujo de trabajo: (1) Ingesta y Procesamiento Estructural de los Documentos; (2) Representación y Enriquecimiento del Conocimiento; y (3) Interacción, Búsqueda y Generación de Respuestas. A continuación, se detalla cada grupo en tablas separadas.
+\newpage
+\subsubsection*{Grupo 1: Ingesta y Procesamiento Estructural de Documentos}
+Estos requisitos describen las funcionalidades necesarias para cargar, analizar y segmentar los documentos de entrada, transformando el contenido no estructurado en una representación jerárquica inicial.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4} % Aumenta el espacio vertical para mejorar la legibilidad
+\caption{Requisitos Funcionales: Ingesta y Procesamiento Estructural.}
+\label{tab:rf_ingesta}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Descripción} \\
+\hline
+\textbf{RF-01} & Carga de Documentos & El sistema deberá permitir la carga simultánea de múltiples documentos en formato PDF desde una ruta de directorio especificada. \\
+\hline
+\textbf{RF-02} & Detección Adaptativa de TOC & El sistema deberá implementar una estrategia dual para detectar la Tabla de Contenidos (TOC): prioritariamente mediante el análisis de hipervínculos internos y, como alternativa, mediante el reconocimiento de patrones textuales con expresiones regulares. \\
+\hline
+\textbf{RF-03} & Inferencia de Jerarquía & El sistema deberá construir una estructura jerárquica (padre-hijo) de las secciones del documento, basándose en el análisis de prefijos numéricos (ej: 1.2.1) y la indentación visual (posición X) de los títulos en la TOC. \\
+\hline
+\textbf{RF-04} & Chunking Jerárquico & El sistema deberá segmentar (chunking) los documentos de forma estructural, creando chunks cuyo contenido corresponde al texto delimitado entre el título de una sección y el de la siguiente, localizando dichos títulos con precisión mediante similitud difusa (fuzzy matching). \\
+\hline
+\end{tabularx}
+\end{table}
+
+\newpage
+\subsubsection*{Grupo 2: Representación y Enriquecimiento del Conocimiento}
+Una vez procesada la estructura inicial, los siguientes requisitos se centran en cómo esta información es representada, almacenada y enriquecida semánticamente para facilitar una recuperación de información más avanzada.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Requisitos Funcionales: Representación y Enriquecimiento.}
+\label{tab:rf_representacion}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Descripción} \\
+\hline
+\textbf{RF-05} & Construcción de Grafo Estructural & Cada documento deberá ser representado como un grafo dirigido (\texttt{NetworkX}), donde los nodos son los chunks y las aristas representan relaciones estructurales (jerárquicas y secuenciales). \\
+\hline
+\textbf{RF-06} & Enriquecimiento Semántico del Grafo & El grafo estructural deberá ser enriquecido mediante la adición de aristas semánticas entre nodos no conectados estructuralmente que superen un umbral predefinido de similitud de coseno entre sus embeddings. \\
+\hline
+\textbf{RF-07} & Generación de Embeddings Duales & Para cada chunk, el sistema deberá generar y almacenar dos representaciones vectoriales (embeddings) distintas: una para su título y otra para su contenido textual. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\newpage
+\subsubsection*{Grupo 3: Interacción, Búsqueda y Generación (GraphRAG)}
+Este grupo final de requisitos define el núcleo interactivo del sistema, detallando cómo se procesa la consulta del usuario, se recupera la información relevante del grafo de conocimiento y se genera la respuesta final.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Requisitos Funcionales: Interacción, Búsqueda y Generación.}
+\label{tab:rf_interaccion}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Descripción} \\
+\hline
+\textbf{RF-08} & Selección de Estrategia por Agente & Un agente basado en LLM deberá analizar la consulta del usuario para determinar la estrategia de respuesta óptima: Acceso Parcial (RAG) para preguntas específicas, o Acceso Completo para preguntas generales (ej: resúmenes). \\
+\hline
+\textbf{RF-09} & Optimización de Consulta por Agente & Un agente LLM deberá refinar la consulta del usuario antes de la búsqueda, simplificándola a sus términos clave para mejorar la precisión del sistema de recuperación de información. \\
+\hline
+\textbf{RF-10} & Búsqueda Híbrida y Re-ranking & El sistema realizará una búsqueda híbrida combinando similitud semántica (embeddings) y búsqueda lexicográfica (BM25) sobre sub-chunks. Los resultados serán reordenados mediante un modelo Cross-Encoder para maximizar la relevancia. \\
+\hline
+\textbf{RF-11} & Selección de Contexto Basada en Grafo & El contexto final se seleccionará analizando un subgrafo de consulta, aplicando una puntuación final a cada nodo que combina su relevancia directa, la relevancia propagada de sus familiares (padre, hijos, hermanos) y métricas de centralidad del grafo. \\
+\hline
+\textbf{RF-12} & Modos de Respuesta Múltiples & El sistema deberá ser capaz de generar respuestas en dos modos: individual (una respuesta por documento) y consolidado (una única respuesta sintetizada a partir de todos los documentos). \\
+\hline
+\end{tabularx}
+\end{table}
+\newpage
+
+\section{Requisitos No Funcionales (RNF)}
+\label{sec:rnf}
+
+Los requisitos no funcionales definen los atributos de calidad del sistema, tales como su rendimiento, modularidad, robustez y mantenibilidad. Estos requisitos son cruciales para asegurar que el sistema no solo funcione, sino que lo haga de manera eficiente y fiable. A continuación, se detallan agrupados por su naturaleza.
+
+\subsubsection*{Grupo 1: Atributos de Arquitectura y Calidad de Software}
+Este grupo define las características intrínsecas del diseño y la construcción del software que garantizan su mantenibilidad, flexibilidad y adaptabilidad a futuro.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Requisitos No Funcionales: Arquitectura y Calidad.}
+\label{tab:rnf_arquitectura}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Descripción} \\
+\hline
+\textbf{RNF-01} & Modularidad & La arquitectura del sistema deberá estar desacoplada, con una clara separación de responsabilidades entre los componentes de extracción (\texttt{chunk\_extractor.py}), decisión (\texttt{document\_strategy\_agent.py}) y el núcleo RAG (\texttt{main.py}), facilitando su mantenimiento y escalabilidad. \\
+\hline
+\textbf{RNF-02} & Configurabilidad & El sistema deberá permitir la configuración del modelo de lenguaje (LLM) a utilizar a través de parámetros, sin necesidad de modificar el código fuente principal. \\
+\hline
+\textbf{RNF-03} & Portabilidad (Ejecución Local) & El sistema deberá ser capaz de operar utilizando modelos de lenguaje alojados localmente mediante una interfaz como Ollama, garantizando su funcionamiento sin dependencia de servicios cloud de pago. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\newpage
+\subsubsection*{Grupo 2: Atributos de Operación y Rendimiento}
+Estos requisitos se centran en el comportamiento observable del sistema durante su ejecución, incluyendo su eficiencia, fiabilidad y la facilidad para diagnosticar su funcionamiento.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Requisitos No Funcionales: Operación y Rendimiento.}
+\label{tab:rnf_operacion}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Descripción} \\
+\hline
+\textbf{RNF-04} & Trazabilidad y Depuración & El sistema deberá generar artefactos para la depuración, incluyendo visualizaciones del grafo de consulta (\texttt{.png}) y archivos de texto (\texttt{.txt}) que registren el contexto exacto enviado al LLM en cada consulta. \\
+\hline
+\textbf{RNF-05} & Robustez & El sistema deberá gestionar de forma controlada los errores durante la lectura de documentos (ej: PDFs corruptos), notificando al usuario y continuando la operación con los archivos válidos sin interrumpir la ejecución. \\
+\hline
+\textbf{RNF-06} & Gestión de Recursos & La versión del sistema que opera con modelos locales deberá ser funcional en equipos de escritorio con especificaciones de hardware razonables (ej: 16 GB de RAM y GPU con 8 GB de VRAM). \\
+\hline
+\end{tabularx}
+\end{table}

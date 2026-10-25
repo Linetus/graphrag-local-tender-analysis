@@ -1,0 +1,20 @@
+# Pipeline principal
+PyMuPDF>=1.23.0
+networkx>=3.0
+sentence-transformers>=2.2.0
+scikit-learn>=1.3.0
+rank-bm25>=0.2.2
+ollama>=0.1.0
+tiktoken>=0.5.0
+matplotlib>=3.7.0
+numpy>=1.24.0
+thefuzz>=0.20.0
+python-Levenshtein>=0.21.0
+langchain>=0.1.0
+langchain-community>=0.0.20
+
+# Evaluación (eval_metrics.py)
+rouge-score>=0.1.2
+bert-score>=0.3.13
+ragas>=0.1.0
+langchain-ollama>=0.1.0

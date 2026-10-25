@@ -1,0 +1,128 @@
+\chapter{Manual de Usuario e Instalación}
+\label{ape:manual}
+
+Este anexo proporciona las instrucciones necesarias para la puesta en marcha y operación del sistema en un entorno local, incluyendo los requisitos de hardware y software, el procedimiento de instalación paso a paso, la guía de operación con ejemplos reales y una sección de resolución de problemas comunes.
+
+\section{Requisitos del Sistema}
+
+\subsection{Hardware recomendado}
+Para una ejecución fluida de los modelos locales, se recomienda:
+\begin{itemize}
+    \item \textbf{GPU:} NVIDIA con arquitectura CUDA (mínimo 8 GB VRAM, ej. RTX 3060/4050 o superior). Sin GPU, el sistema opera por CPU con tiempos de ingesta significativamente mayores.
+    \item \textbf{RAM:} 16 GB o superior. El sistema mantiene los grafos de todos los documentos cargados en memoria durante la sesión (aproximadamente 15 MB por cada 100 páginas procesadas).
+    \item \textbf{Almacenamiento:} Mínimo 10 GB de espacio libre para alojar los modelos de lenguaje descargados por \texttt{Ollama} y los modelos de \textit{embeddings} de \texttt{sentence-transformers}.
+\end{itemize}
+
+\subsection{Software necesario}
+\begin{itemize}
+    \item \textbf{Python 3.10} o superior.
+    \item \textbf{Ollama:} Motor de inferencia local. Disponible en \url{https://ollama.com}. Debe estar en ejecución como servicio en segundo plano antes de iniciar el sistema.
+    \item \textbf{NVIDIA CUDA Toolkit:} Versión 12.x para aceleración por hardware. Descargable desde \url{https://developer.nvidia.com/cuda-downloads}.
+    \item \textbf{Git:} Para clonar el repositorio del proyecto.
+\end{itemize}
+
+\section{Instalación y Configuración}
+
+\subsection{Paso 1: Obtención del código fuente}
+Clone el repositorio del proyecto en su directorio de trabajo:
+\begin{verbatim}
+git clone <URL_del_repositorio>
+cd <nombre_del_directorio>
+\end{verbatim}
+Sustituya \texttt{<URL\_del\_repositorio>} por la URL real del repositorio.
+
+\subsection{Paso 2: Preparación del entorno virtual}
+Se recomienda el uso de un entorno virtual de Python para aislar las dependencias del proyecto:
+\begin{verbatim}
+python -m venv venv
+
+# En Linux/macOS:
+source venv/bin/activate
+
+# En Windows:
+venv\Scripts\activate
+\end{verbatim}
+Una vez activado el entorno, instale todas las dependencias del proyecto:
+\begin{verbatim}
+pip install -r requirements.txt
+\end{verbatim}
+
+\subsection{Paso 3: Descarga de modelos en Ollama}
+Con \texttt{Ollama} instalado y en ejecución, descargue el modelo de lenguaje principal:
+\begin{verbatim}
+ollama pull llama3.1:8b
+\end{verbatim}
+Este proceso requiere una conexión a internet y descarga aproximadamente 4,7 GB. Los modelos de \textit{embeddings} (\texttt{sentence-transformers/all-MiniLM-L6-v2} y el \textit{cross-encoder}) se descargan automáticamente desde HuggingFace en la primera ejecución del sistema.
+
+\subsection{Paso 4: Preparación de los documentos}
+Coloque los archivos PDF que desea analizar en el directorio \texttt{Code/MVP/Pliegos/} del proyecto (o modifique la variable de ruta al inicio de \texttt{main.py} para apuntar a su directorio de documentos):
+\begin{verbatim}
+mkdir Code/MVP/Pliegos
+cp /ruta/a/sus/pliegos/*.pdf Code/MVP/Pliegos/
+\end{verbatim}
+
+\section{Guía de Operación}
+
+\subsection{Inicio del sistema}
+Asegúrese de que \texttt{Ollama} esté en ejecución en segundo plano y, con el entorno virtual activado, ejecute el script principal:
+\begin{verbatim}
+python main.py
+\end{verbatim}
+Al iniciarse, el sistema procesará automáticamente todos los PDFs del directorio configurado. Verá en la consola el progreso de extracción, generación de \textit{embeddings} y construcción del grafo para cada documento. Una vez finalizada la fase de ingesta, aparecerá el \textit{prompt} interactivo de chat.
+
+\subsection{Comandos de control}
+Durante la sesión de chat, el usuario puede utilizar los siguientes comandos especiales para gestionar el comportamiento del sistema:
+
+\begin{table}[ht]
+\centering
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Comando} & \textbf{Efecto} \\ \hline
+\texttt{modo 1} & Cambia a respuestas individuales por documento. Cada PDF recibe y responde la consulta de forma independiente. Modo por defecto. \\ \hline
+\texttt{modo 2} & Activa el modo consolidado multidocumento. El sistema extrae subgrafos de todos los documentos y genera una única respuesta integrada. \\ \hline
+\texttt{visualizar si} & Activa la generación de archivos \texttt{.png} con la representación visual del subgrafo de consulta tras cada respuesta. \\ \hline
+\texttt{visualizar no} & Desactiva la generación de visualizaciones (comportamiento por defecto). \\ \hline
+\texttt{salir} & Finaliza la ejecución del programa de forma limpia. \\ \hline
+\end{tabularx}
+\caption{Comandos de control disponibles en la interfaz interactiva.}
+\label{tab:comandos}
+\end{table}
+
+\subsection{Ejemplos de consultas}
+
+A continuación se presentan ejemplos representativos de consultas y el tipo de respuesta que genera el sistema:
+
+\textbf{Consulta específica (modo PARTIAL):}
+
+\medskip\noindent\textit{¿Qué medidas de seguridad física exige el pliego para el rack de comunicaciones?}
+
+El agente de estrategia selecciona \texttt{PARTIAL}, el optimizador reformula la consulta a \textit{``seguridad física rack comunicaciones''}, y el sistema recupera el nodo correspondiente junto con su sección padre. La respuesta detalla los requisitos de anclaje, cierre y acceso restringido del \textit{rack}.
+
+\textbf{Consulta de síntesis global (modo FULL):}
+
+\medskip\noindent\textit{Resume los principales requisitos técnicos del sistema de videovigilancia.}
+
+El agente detecta la necesidad de síntesis y selecciona \texttt{FULL}, enviando al LLM el contenido completo del documento. La respuesta consolida los requisitos de resolución de cámara, almacenamiento y conectividad en una lista estructurada.
+
+\textbf{Consulta multidocumento (modo 2):}
+
+\medskip\noindent\textit{Compara los plazos de entrega del pliego técnico y el administrativo.}
+
+Con el modo 2 activo, el sistema consulta ambos grafos de forma simultánea y genera una respuesta que cita explícitamente cada documento, señalando posibles inconsistencias entre ellos.
+
+\section{Resolución de Problemas Frecuentes}
+
+\begin{description}
+    \item[El sistema no detecta secciones del índice correctamente.] Este problema suele darse en documentos cuyo índice no contiene hipervínculos internos o cuya numeración de secciones es irregular. El sistema intentará la extracción mediante expresiones regulares como mecanismo de \textit{fallback}. Si los resultados siguen siendo incorrectos, verifique que el PDF no esté protegido contra la extracción de texto o que no sea un documento escaneado sin capa OCR.
+
+    \item[Ollama no responde o lanza un error de conexión.] Compruebe que el servicio de \texttt{Ollama} esté en ejecución ejecutando \texttt{ollama list} desde la terminal. Si el servicio no aparece, inícielo con \texttt{ollama serve}. Verifique también que el puerto por defecto (11434) no esté bloqueado por el cortafuegos del sistema.
+
+    \item[Error de memoria insuficiente (CUDA out of memory).] El modelo \texttt{llama3.1:8b} cuantizado a 4-bit requiere aproximadamente 5,2 GB de VRAM. Si su GPU dispone de menos memoria, puede intentar usar el modelo en su variante de menor tamaño (\texttt{llama3.2:3b}) ejecutando \texttt{ollama pull llama3.2:3b} y configurando el nombre del modelo en el código fuente.
+
+    \item[Los tiempos de ingesta son muy elevados.] Si el sistema opera en modo CPU (sin GPU NVIDIA o sin CUDA instalado), los tiempos de generación de \textit{embeddings} pueden ser entre $3\times$ y $5\times$ superiores. Asegúrese de que \texttt{CUDA Toolkit 12.x} esté correctamente instalado y de que \texttt{torch} detecte la GPU ejecutando:
+\begin{verbatim}
+python -c "import torch; print(torch.cuda.is_available())"
+\end{verbatim}
+
+    \item[El sistema genera un chunk que mezcla contenido de secciones distintas.] Esto ocurre ocasionalmente cuando los títulos de sección tienen una similitud textual muy alta y el \textit{fuzzy matching} no puede distinguirlos con precisión. En ese caso, puede ajustar el umbral de similitud difusa en el archivo de configuración de \texttt{chunk\_extractor.py}.
+\end{description}

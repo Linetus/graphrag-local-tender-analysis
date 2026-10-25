@@ -1,0 +1,102 @@
+\documentclass[a4paper,12pt,twoside,onecolumn,openright,svgnames]{book}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% PAQUETES IMPORTANTES
+\usepackage[a4paper,left=2cm,top=2.5cm,right=1.5cm,bottom=2.5cm]{geometry}
+\usepackage[utf8]{inputenc}       % códificación de símbolos
+\usepackage{amsmath}
+\usepackage{amssymb}          % \checkmark y otros símbolos matemáticos
+\usepackage[spanish,es-tabla,es-nodecimaldot]{babel}
+\unaccentedoperators              % babel acentúa operadores math. por defecto
+\usepackage{times}                % (times roman, helvetica, courier)
+\usepackage[official]{eurosym}    % €€€
+\usepackage{graphicx}             % Imprescindible para gráficos
+\usepackage{svg}                  % para incluír gráficos svg
+% \usepackage{svg-inkscape}       % útil con inkscape
+\usepackage{xurl}                  % para que latex pueda partir URLs
+\usepackage{ltxtable}             % para usar \LTXtable
+\usepackage{xcolor}     % Texto en color diferente
+\usepackage{booktabs}
+
+%%%%%%%%%%%%%%%%%% ANTES DE AÑADIR UN PAQUETE COMPRUEBA SI ESTÁ EN ESTA
+%%%%%%%%%%%%%%%%%% LISTA Y BUSCA LA DOCUMENTACIÓN PUES SI AÑADES UNO
+%%%%%%%%%%%%%%%%%% PUEDE COLISIONAR CON UNO DE ESTOS.
+%%%%%%%%%%%%   PACKAGES PARA CODIGO Y LISTADOS
+% minted para listados:
+%     https://www.overleaf.com/learn/latex/Code_Highlighting_with_minted
+\usepackage[newfloat]{minted}
+\usepackage{listings} % es compatible con minted (para otros listados)
+\renewcommand{\lstlistingname}{Código}
+\renewcommand{\lstlistlistingname}{Índice de \lstlistingname s}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=Código Fuente}
+
+%%%%%%%%%%%%%  UTILIDADES
+\usepackage{pdfpages}   % Incluir pdfs como paginas del documento (para anexos)
+\usepackage[hidelinks]{hyperref} % para incluir links intra/extra documento
+\usepackage{colortbl}   % tablas con colores
+%%% Tablas, arrays, etc.
+\usepackage{tabularx}   % Nuevo tipo de columna en tabla X, se ajusta al tamaño
+\usepackage{multirow}   % Para tablas con multifilas
+\usepackage{array}      % Para los nuevos tipos de columnas en tabla
+
+%%%%%%%%%%%%%  PACKAGES QUE DAN CONTROL EXTRA A VARIAS ORDENES
+% caption para gestionar los listados en floats -como figuras o tablas-
+\usepackage{caption}              % con mejor control de captions
+\usepackage{setspace}             % facilita la gestión de distancias
+\usepackage{cite}                 % mejora aspecto bibliografía numérica
+\usepackage[toc,page]{appendix}   % control extra para apéndices.
+\usepackage{subfig}               % para figuras dentro de figuras
+\usepackage{float}                % mejor control de posiciones en float
+\usepackage{xspace}               % busca pequeños errores en nombres latex
+\usepackage{enumitem}             % http://ctan.org/pkg/enumitem
+\usepackage[nottoc,notlot,notlof]{tocbibind} % bibliografía a tabla Contenidos
+
+%%%%%%%%%%%%% TUNEO DE DISTANCIAS Y PEQUEÑOS DETALLES
+\renewcommand{\arraystretch}{1.5} % padding tablas
+\renewcommand{\baselinestretch}{1.2} % (latex neutro) esponja el texto.
+\setlength{\parindent}{0.5cm}     % sangrado de primera línea de párrafo.
+\usepackage{microtype}            % Soluciona algunos problemas de Overfullness
+\usepackage[section]{placeins}    % Fuerza a que los floats se queden en su section
+\addtolength{\parskip}{1em}       % Separa un poquito los parrafos
+
+%%%%%%%%%%%%%%%  FIN DE PAQUETES (no deberías incluír ninguno fuera de aquí)
+
+\begin{document}
+   \raggedbottom
+   \addtolength{\headsep}{4mm}
+   % Material inicial del documento.
+   % Esta sección va en número romanos en minúscula.
+   \frontmatter
+      % He organizado los archivos como me gusta. Siéntete libre
+      % de crear las carpetas que creas necesario.
+      \include{Tex_files/FrontMatter/title}
+      \include{Tex_files/FrontMatter/Agradecimientos}
+      \include{Tex_files/FrontMatter/Resumen}
+      \tableofcontents
+      \listoffigures
+      \listoftables
+   % Material principal del documento
+   % Esta sección va en números arábicos desde el 1
+   % Los títulos y tipos de capítulos sólo son para muestra
+   % y tu memoria puede tener otros distintos.
+   \mainmatter
+      \include{Tex_files/MainMatter/cap_1/Introduccion}
+      \include{Tex_files/MainMatter/cap_2/Planificacion}
+      \include{Tex_files/MainMatter/cap_5/Diseño}
+      \include{Tex_files/MainMatter/cap_6/Implementación}
+      \include{Tex_files/MainMatter/cap_7/Pruebas}
+      \include{Tex_files/MainMatter/cap_8/Conclusiones}
+
+      \appendix\setcounter{chapter}{0} % para que empiece en la A.
+
+      \include{Tex_files/MainMatter/cap_A/Repositorio}
+      \include{Tex_files/MainMatter/cap_B/Manual}
+      
+      % La bibliografía se genera automágicamente
+      % Yo prefiero incluírla en el "mainmatter"
+      \bibliographystyle{unsrt}
+      \bibliography{refs}
+   % Material final del documento (glosarios, índice y contraportada)
+   % Aquí pueden ir los apéndices aunque pueden subirse.
+   \backmatter
+\end{document}

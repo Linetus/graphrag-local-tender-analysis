@@ -1,0 +1,126 @@
+{
+  "baseline": {
+    "answers": [
+      "Lo siento, pero no tengo información sobre el CCN-STIC-817. Sin embargo, puedo proporcionarte una respuesta general basada en la clasificación comúnmente utilizada por organismos internacionales y expertos en ciberseguridad.\n\nLa clasificación de los niveles de peligrosidad de un ciberincidente suele ser:\n\n1. **Nivel 0**: Incidentes no significativos, como accesos no autorizados a sistemas o datos sin consecuencias.\n2. **Nivel 1**: Incidentes con impacto limitado, donde se han comprometido algunos datos o sistemas, pero el daño es mínimo y fácil de recuperar.\n3. **Nivel 2**: Incidentes moderados, donde hay un mayor riesgo de pérdida de datos importantes o interrupción significativa del servicio.\n4. **Nivel 3**: Incidentes graves, que pueden causar una pérdida importante de datos, daño a la reputación o incluso amenazas a la seguridad nacional.\n\nSin embargo, es importante mencionar que cada organización y país puede tener sus propias clasificaciones y criterios para evaluar el nivel de peligrosidad de un ciberincidente.",
+      "La respuesta correcta es el Centro Criptológico Nacional (CCN) del Ministerio de Defensa.",
+      "No tengo información específica sobre el plazo máximo para reportar un incidente al CCN-CERT. Sin embargo, según la Ley de Ciberseguridad del Estado Español (Ley 8/2022), los proveedores de servicios de seguridad cibernética como el CCN-CERT deben recibir notificaciones de incidentes de seguridad lo antes posible.",
+      "La guía CCN-STIC-812 se centra en el ataque de phishing.",
+      "La cabecera HTTP recomendada por la guía para mitigar ataques XSS es \"Content-Security-Policy\" (CSP). Esta cabecera permite a los desarrolladores especificar las fuentes de contenido permitidas en una página web, lo que ayuda a prevenir que el código malicioso se ejecute en un sitio web.",
+      "El ciclo de gestión de una crisis de ciberseguridad según INCIBE se compone de las siguientes fases:\n\n1. Prevención y detección\n2. Respuesta a incidentes\n3. Recuperación y restauración\n4. Aprendizaje y mejora",
+      "Un CSIRT (Centro de Seguimiento e Incidentes de Ciberseguridad) es una unidad especializada en la gestión y respuesta a incidentes cibernéticos, según la guía de INCIBE. Su función principal es detectar, analizar y mitigar amenazas cibernéticas que puedan afectar a un organismo o a su infraestructura informática.",
+      "Un incidente de seguridad se considera una crisis cuando afecta a múltiples sistemas o servicios críticos, y su resolución requiere la intervención de múltiples equipos y recursos. Esto puede incluir la pérdida de datos confidenciales, el acceso no autorizado a sistemas sensibles, o la interrupción de servicios esenciales para la organización o la sociedad en general."
+    ],
+    "token_f1": [
+      0.05555555555555555,
+      0.5263157894736842,
+      0.23728813559322032,
+      0.0,
+      0.1276595744680851,
+      0.0625,
+      0.16666666666666669,
+      0.2857142857142857
+    ],
+    "rouge_l": [
+      0.022598870056497175,
+      0.4761904761904762,
+      0.15,
+      0.07692307692307693,
+      0.10344827586206896,
+      0.13333333333333336,
+      0.1515151515151515,
+      0.1951219512195122
+    ],
+    "bertscore": [
+      0.7933310866355896,
+      0.8975783586502075,
+      0.8460962176322937,
+      0.8410875201225281,
+      0.8163565993309021,
+      0.8387904763221741,
+      0.8605422377586365,
+      0.8693366050720215
+    ],
+    "ragas_similarity": [
+      0.4160587988398067,
+      0.7464206188955884,
+      0.4488564678516346,
+      0.3527270648736107,
+      0.32350796562975015,
+      0.6528412465444648,
+      0.47140624375016144,
+      0.4686375451659357
+    ],
+    "ragas_correctness": [
+      0.5776989102362674,
+      0.48660515472389715,
+      0.6122141169629086,
+      0.4631817662184027,
+      0.08087699140743754,
+      0.6989245973504019,
+      0.6803515609375402,
+      0.5457308148629125
+    ]
+  },
+  "graphrag": {
+    "answers": [
+      "Los niveles de peligrosidad de un ciberincidente según el CCN-STIC-817 son cinco: Bajo, Medio, Alto, Muy Alto y Crítico.",
+      "El CCN-CERT (Centro Criptológico Nacional) es el organismo que debe ser notificado ante un incidente de categoría ALTA en la Administración Pública.",
+      "Según el documento CCN-STIC-817, el plazo máximo es de 60 días, que es cuando el sistema SAT cierra el incidente sin respuesta.",
+      "La guía CCN-STIC-812 cubre ataques de inyección SQL, Cross-Site Scripting (XSS), desplazamiento por directorios, referencias directas a ficheros, ejecución de comandos del sistema operativo y HTTP Response Splitting.",
+      "La guía no menciona específicamente ninguna cabecera HTTP para mitigar ataques XSS. Recomienda aplicar defensa en profundidad y tokens anti-CSRF.",
+      "Las fases son: 1. Preparación, 2. Identificación y análisis, 3. Respuesta y comunicación, 4. Cierre.",
+      "Según la guía de INCIBE, un CSIRT (Computer Security Incident Response Team) es un equipo responsable de gestionar y responder a incidentes de seguridad en computadoras y redes.",
+      "Un incidente de seguridad escala a crisis cuando causa daños significativos, riesgo de pérdida de datos importantes, interrupción de servicios críticos o pone en riesgo la reputación de la organización."
+    ],
+    "token_f1": [
+      0.42857142857142855,
+      0.42857142857142855,
+      0.358974358974359,
+      0.28571428571428575,
+      0.2962962962962963,
+      0.4444444444444445,
+      0.5714285714285715,
+      0.3157894736842105
+    ],
+    "rouge_l": [
+      0.18181818181818182,
+      0.4117647058823529,
+      0.34615384615384615,
+      0.21276595744680854,
+      0.19354838709677416,
+      0.4799999999999999,
+      0.5238095238095238,
+      0.2222222222222222
+    ],
+    "bertscore": [
+      0.8648772239685059,
+      0.913883626461029,
+      0.8663650751113892,
+      0.8688083291053772,
+      0.8553800582885742,
+      0.9017670750617981,
+      0.9005420804023743,
+      0.8787261843681335
+    ],
+    "ragas_similarity": [
+      0.5916768690484115,
+      0.8142917940592321,
+      0.6351267716872185,
+      0.6441944228950658,
+      0.38704343970232336,
+      0.7964417913449124,
+      0.7093495080653466,
+      0.5494901952452148
+    ],
+    "ragas_correctness": [
+      0.5645858839287696,
+      0.503572948514808,
+      0.40878169292180466,
+      0.4610486057237665,
+      0.39676085992558086,
+      0.8809286296544099,
+      0.6773373770163367,
+      0.6373725488113036
+    ]
+  }
+}

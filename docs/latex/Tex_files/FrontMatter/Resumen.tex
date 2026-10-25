@@ -1,0 +1,39 @@
+
+
+\ 
+
+\vskip 2cm
+
+{\noindent\bfseries\Huge Resumen}
+
+\vskip 1cm
+
+Los Modelos de Lenguaje (LLM) representan una de las ramas de la inteligencia artificial que más avances ha experimentado en los últimos años. Uno de los principales desafíos que presentan, tanto por su coste computacional como por las limitaciones que afectan directamente al usuario, es la cantidad de tokens que pueden procesar. En este trabajo se estudian en profundidad los LLMs, su funcionamiento, el uso de agentes, y se plantean soluciones prácticas al problema del contexto.
+\\
+\vskip 1cm
+
+Como parte del desarrollo, se ha implementado una solución personalizada para un caso empresarial concreto, cuyo enfoque puede extrapolarse a otros ámbitos. Para ello, se ha desplegado en local un servidor de Ollama con distintos modelos de lenguaje, al que se le han alimentado documentos extensos (de más de 100 páginas). A partir de estos, el sistema permite realizar preguntas al modelo sobre el contenido.
+\\
+\vskip 1cm
+
+Para lograrlo, se han utilizado técnicas de segmentación del contenido en chunks, así como agentes, rerankers, y un sistema de búsqueda con bases de datos vectoriales basadas en grafos mediante LangGraph, realizando una modificación del conocido Retrieval Augmented Generation(RAG) , el cual explicaremos con más detalle posteriormente. La combinación de estas tecnologías, aplicadas desde Python, ha permitido construir un chatbot capaz de responder preguntas de forma eficiente, utilizando únicamente modelos que pueden ejecutarse en local.
+
+\vskip 1cm
+
+Finalmente, haremos un pequeño estudio de la importancia de la calidad del propio modelo usado, comparando los resultados de algunos de los modelos locales, con los proporcionados con la API de ChatGPT (Haciendo primero nuestro tratamiento de los datos).
+
+\textbf{Palabras clave:} LLM, Python, Agentes, LangChain, LangGraph, Ollama, Retrieval-Augmented Generation (RAG), modelos locales, búsqueda semántica, bases de datos vectoriales.
+
+\newpage
+\newpage
+
+{\bfseries\Huge Abstract}
+
+\vskip 1cm
+Large Language Models (LLMs) have become one of the most rapidly evolving branches of Artificial Intelligence in recent years. However, one of the main challenges they face is their limited token window, which directly impacts computational cost and user experience. This project explores in depth the functioning of LLMs, the use of agents, and proposes practical solutions to the context length limitation.
+\vskip 1cm
+A custom solution was implemented to address a specific business problem, with the aim of building a scalable and locally hosted chatbot. Using Ollama to run various local LLMs, the system is able to answer user questions about large sets of documents (exceeding 100 pages). To achieve this, we applied content chunking techniques, as well as tools such as agents, rerankers, and a semantic search system based on graph-structured vector databases using LangGraph. This setup represents a customized version of Retrieval-Augmented Generation (RAG).
+\vskip 1cm
+All components were integrated using Python, and the solution enables efficient document querying using only locally executed models. Finally, we provide a brief comparison between the performance of local models and ChatGPT API-based results, after applying our own preprocessing pipeline.
+\vskip 1cm
+\textbf{KeyWords:} LLM, Python, LangChain, LangGraph, Retrieval-Augmented Generation, local models, semantic search, Ollama, agents.

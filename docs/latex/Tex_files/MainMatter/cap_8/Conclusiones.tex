@@ -1,0 +1,124 @@
+﻿\chapter{Conclusiones y trabajo futuro}\label{cap8}
+En este capítulo se presenta un balance final del proyecto, analizando el grado de cumplimiento de los objetivos planteados y sintetizando las aportaciones técnicas realizadas. Asimismo, se proponen diversas líneas de evolución para mejorar y extender las capacidades del sistema en el futuro.
+
+\section{Verificación de Objetivos}
+
+En el Capítulo~\ref{cap1} se establecieron un conjunto de objetivos que debía alcanzar el sistema. A continuación se analiza en qué medida cada uno de ellos ha sido satisfecho, tomando como evidencia los resultados obtenidos en el Capítulo~\ref{cap7}.
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Verificación del cumplimiento de objetivos del proyecto.}
+\label{tab:verificacion_objetivos}
+\begin{tabularx}{\textwidth}{|p{5.2cm}|X|c|}
+\hline
+\textbf{Objetivo} & \textbf{Resultado obtenido} & \textbf{Estado} \\ \hline
+Procesar documentos PDF con estructura jerárquica compleja & Tasa de acierto del 100\% en niveles primarios y del 90-95\% en subsecciones. & \checkmark \\ \hline
+Construir un grafo de conocimiento documental & Grafo \texttt{NetworkX} con aristas jerárquicas, secuenciales y semánticas ($\tau \geq 0{,}65$) generado con éxito. & \checkmark \\ \hline
+Superar al RAG tradicional en preguntas con dependencia contextual & La propagación familiar elevó al Top-3 el 95\% de los nodos que quedaban fuera del Top-5 con RAG vectorial puro. & \checkmark \\ \hline
+Permitir inferencia completamente local & Sistema funcional con \texttt{llama3.1:8b} vía \texttt{Ollama}, sin envío de datos a terceros. & \checkmark \\ \hline
+Selección automática de estrategia de respuesta & Agente con tasa de acierto del 96\% (48/50 consultas evaluadas). & \checkmark \\ \hline
+Respuesta consolidada multidocumento & Modo 2 operativo, con síntesis de información de múltiples grafos en una única respuesta. & \checkmark \\ \hline
+Reducir el tiempo de análisis de licitaciones extensas & El sistema obtiene respuestas relevantes en $< 30$ seg en modo \texttt{PARTIAL}, frente a la lectura manual del pliego completo. & \checkmark \\ \hline
+\end{tabularx}
+\end{table}
+
+\section{Cumplimiento de Requisitos}
+
+La siguiente tabla resume el estado de cumplimiento de los requisitos funcionales y no funcionales definidos en el Capítulo~\ref{chap:requisitos}, contrastados con las implementaciones descritas en el Capítulo~\ref{cap6} y validadas en el Capítulo~\ref{cap7}.
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Verificación del cumplimiento de Requisitos Funcionales.}
+\label{tab:cumplimiento_rf}
+\begin{tabularx}{\textwidth}{|l|X|c|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Estado} \\ \hline
+RF-01 & Carga de Documentos & \checkmark \\ \hline
+RF-02 & Detección Adaptativa de TOC & \checkmark \\ \hline
+RF-03 & Inferencia de Jerarquía & \checkmark \\ \hline
+RF-04 & Chunking Jerárquico & \checkmark \\ \hline
+RF-05 & Construcción de Grafo Estructural & \checkmark \\ \hline
+RF-06 & Enriquecimiento Semántico del Grafo & \checkmark \\ \hline
+RF-07 & Generación de Embeddings Duales & \checkmark \\ \hline
+RF-08 & Selección de Estrategia por Agente & \checkmark \\ \hline
+RF-09 & Optimización de Consulta por Agente & \checkmark \\ \hline
+RF-10 & Búsqueda Híbrida y Re-ranking & \checkmark \\ \hline
+RF-11 & Selección de Contexto Basada en Grafo & \checkmark \\ \hline
+RF-12 & Modos de Respuesta Múltiples & \checkmark \\ \hline
+\end{tabularx}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\caption{Verificación del cumplimiento de Requisitos No Funcionales.}
+\label{tab:cumplimiento_rnf}
+\begin{tabularx}{\textwidth}{|l|X|c|}
+\hline
+\textbf{ID} & \textbf{Nombre} & \textbf{Estado} \\ \hline
+RNF-01 & Modularidad & \checkmark \\ \hline
+RNF-02 & Configurabilidad & \checkmark \\ \hline
+RNF-03 & Portabilidad (Ejecución Local) & \checkmark \\ \hline
+RNF-04 & Trazabilidad y Depuración & \checkmark \\ \hline
+RNF-05 & Robustez & \checkmark \\ \hline
+RNF-06 & Gestión de Recursos & \checkmark \\ \hline
+\end{tabularx}
+\end{table}
+
+Los doce requisitos funcionales y los seis no funcionales han sido satisfechos en su totalidad. Los requisitos de mayor complejidad de validación fueron RF-11 (propagación familiar y PageRank) y RF-08 (decisión agéntica), evaluados cuantitativamente en las Secciones 7.3 y 7.4 respectivamente.
+
+\section{Conclusiones}
+
+Tras el diseño, implementación y fase de pruebas del sistema \textit{GraphRAG} para el análisis de licitaciones públicas, se pueden extraer las siguientes conclusiones:
+
+\begin{itemize}
+    \item \textbf{Eficacia de la estructura de grafos:} Se ha demostrado que el uso de \texttt{NetworkX} para preservar la jerarquía documental permite mitigar las limitaciones del RAG tradicional. La implementación de relaciones familiares (padre-hijo) tiene como objetivo proporcionar al LLM un contexto más completo, reduciendo el riesgo de respuestas descontextualizadas en secciones técnicas breves. La mejora cuantificada en la posición de fragmentos críticos (del 40\% fuera del Top-5 al 5\% con propagación familiar) valida esta decisión de diseño.
+
+    \item \textbf{Soberanía de datos y modelos locales:} La integración de \texttt{Ollama} con el modelo \texttt{llama3.1:8b} valida la viabilidad de procesar información empresarial sensible de forma 100\% local. Esto facilita el cumplimiento de los requisitos de privacidad y confidencialidad propios de entornos corporativos, sin depender de proveedores de nube externos. La comparativa con \texttt{gpt-4o-mini} demuestra además que la brecha de calidad es manejable para la mayoría de casos de uso, siendo el modelo local la opción más adecuada cuando la confidencialidad es prioritaria.
+
+    \item \textbf{Optimización agéntica:} El uso de agentes para la selección de estrategia (\textit{Partial} vs. \textit{Full}) y la optimización de consultas ha permitido reducir el ruido semántico en un promedio del 30\%, mejorando la precisión de la recuperación. La tasa de acierto del 96\% en la decisión de estrategia demuestra que, aun con un modelo de 8B parámetros, es posible construir sistemas de razonamiento fiables para dominio específico.
+
+    \item \textbf{Impacto en la productividad:} El sistema cumple con la motivación inicial de reducir los tiempos de análisis de pliegos extensos, permitiendo al personal técnico centrarse en tareas de mayor valor añadido. La latencia de respuesta en modo \texttt{PARTIAL} (inferior a 30 segundos) hace viable su integración en flujos de trabajo reales, frente a la lectura manual de documentos de 50-100 páginas.
+
+    \item \textbf{Lecciones aprendidas:} La mayor dificultad técnica del proyecto residió en la fase de extracción jerárquica, no en el motor de recuperación. La variabilidad en la estructura interna de los PDFs (encodings no estándar, índices sin hipervínculos, márgenes variables) exigió el desarrollo de una estrategia de extracción adaptativa con múltiples mecanismos de fallback. Esta experiencia refuerza la importancia de invertir en la calidad de la fase de ingesta como fundamento de cualquier sistema RAG.
+\end{itemize}
+
+\section{Limitaciones y Amenazas a la Validez}
+
+\subsection{Limitaciones del sistema}
+
+Los resultados obtenidos deben interpretarse considerando las siguientes limitaciones:
+
+\begin{itemize}
+    \item \textbf{Dependencia de la calidad del PDF:} El módulo de extracción jerárquica asume que los documentos disponen de un índice parseable con hipervínculos internos o numeración de secciones regular. En documentos escaneados, protegidos o con estructuras atípicas, la tasa de acierto en la identificación de secciones puede degradarse significativamente. El sistema no incluye un módulo de OCR para documentos sin capa de texto seleccionable.
+
+    \item \textbf{Requisitos de hardware:} La ejecución fluida requiere una GPU NVIDIA con al menos 8~GB de VRAM y CUDA~12.x. Sin esta configuración, los tiempos de ingesta se multiplican por un factor de $3\times$ a $5\times$, lo que limita la usabilidad en entornos sin hardware dedicado y penaliza el valor práctico del sistema en esos escenarios.
+
+    \item \textbf{Tamaño del conjunto de evaluación:} El estudio de ablación se realizó sobre 30 preguntas y 6 documentos; la evaluación con métricas automáticas (Sección~\ref{sec:metricas_auto}) empleó únicamente 8 preguntas. Estos volúmenes son adecuados para un Trabajo de Fin de Grado, pero insuficientes para establecer conclusiones estadísticamente robustas o generalizar los resultados a otros dominios documentales.
+
+    \item \textbf{Dominio de validación acotado:} El sistema fue diseñado y validado principalmente sobre pliegos de contratación pública en español, con una prueba de generalización sobre documentos de ciberseguridad. Su comportamiento en documentos con estructura diferente (narrativos, artículos científicos, formularios, documentos en otros idiomas) no ha sido evaluado sistemáticamente.
+\end{itemize}
+
+\subsection{Amenazas a la validez}
+
+\textbf{Validez interna.} La evaluación de las métricas RAGAS (\textit{Answer Similarity} y \textit{Answer Correctness}) empleó el propio modelo \texttt{llama3.1:8b} como juez. Al ser el mismo modelo que genera las respuestas, se introduce un sesgo de autoconfirmación: el modelo tiende a valorar favorablemente sus propias respuestas incluso cuando son factualmente incorrectas, lo que puede inflar los valores de RAGAS Correctness en el sistema GraphRAG y en el baseline por igual. Este fenómeno, conocido como sesgo del paradigma \textit{LLM-as-a-judge}, queda evidenciado en la reducida ganancia de RAGAS Correctness ($+9{,}3$\,\%) frente a la ganancia léxica mucho más pronunciada de Token F1 ($+114$\,\%). Una evaluación con un modelo-juez externo e independiente (p.ej., GPT-4o) proporcionaría mayor imparcialidad.
+
+\textbf{Validez de constructo.} Las respuestas de referencia (\textit{ground truth}) del conjunto de evaluación de ciberseguridad fueron definidas por el propio autor del sistema, lo que introduce un posible sesgo de confirmación en la selección de preguntas y en la formulación de las respuestas esperadas. La detección del error en la \textit{ground truth} inicial de A3 —donde el plan original indicaba ``24 horas'' cuando el documento no establece ese plazo— evidencia que el proceso de definición de referencias no está exento de errores. Una validación por parte de un experto independiente en el dominio de ciberseguridad incrementaría la fiabilidad del conjunto de evaluación.
+
+\textbf{Validez externa.} Los resultados de P@3 y de las métricas automáticas no son directamente generalizables a cualquier tipo de documento o dominio lingüístico. El sistema fue diseñado para documentos técnicos con índice jerárquico explícito en español; su eficacia en documentos con estructura diferente (contratos narrativos, artículos científicos, documentos multicolumna o en otros idiomas) no ha sido demostrada. De forma similar, el modelo \texttt{llama3.1:8b} fue el único modelo local evaluado; otros modelos de escala comparable (Mistral-7B, Qwen-7B) podrían ofrecer resultados distintos con el mismo \textit{pipeline}.
+
+\textbf{Validez de conclusión.} El tamaño de muestra del estudio de ablación (30 preguntas) no permite realizar inferencia estadística formal con tests de significancia. Los valores de P@3 reportados en la Tabla~\ref{tab:ablacion} deben interpretarse como estimaciones del rendimiento del sistema en el corpus específico evaluado, no como afirmaciones sobre el rendimiento esperado en una población general de documentos o consultas.
+
+\section{Trabajo futuro}
+
+A pesar de los resultados positivos, existen diversas áreas de mejora identificadas durante el desarrollo:
+
+\begin{itemize}
+    \item \textbf{Persistencia y escalabilidad:} Actualmente, la base de conocimiento reside en memoria volátil durante la ejecución. Una mejora prioritaria es la integración de una base de datos vectorial persistente (como \textit{ChromaDB} o \textit{FAISS}) para permitir consultas recurrentes sin reprocesar los documentos.
+    \item \textbf{Optimización del contexto:} Para mitigar el fenómeno \textit{Lost in the Middle} \cite{liu2024lost}, se propone implementar técnicas de reordenamiento de contexto que posicionen los fragmentos de mayor relevancia en los extremos del \textit{prompt}.
+    \item \textbf{Ampliación de capacidades de ingesta:} Se plantea la incorporación de un módulo de OCR (\textit{Optical Character Recognition}) para permitir el procesamiento de documentos escaneados o sin capa de texto seleccionable.
+    \item \textbf{Persistencia de la base de conocimiento:} Se recomienda estudiar la integración de mecanismos de caché para los grafos y \textit{embeddings} generados, de forma que documentos ya procesados no deban ser reingresados en cada nueva sesión, reduciendo el tiempo de arranque del sistema.
+    \item \textbf{Interfaz de usuario avanzada:} Evolucionar la actual interfaz CLI hacia una aplicación web (usando \textit{Streamlit} o \textit{Gradio}) para facilitar su adopción por parte de perfiles no técnicos.
+\end{itemize}

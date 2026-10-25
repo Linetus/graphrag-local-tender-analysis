@@ -1,0 +1,98 @@
+\appendix\setcounter{chapter}{1}
+\chapter{Anexo}
+\section{Repositorio para el código}\label{apendix:anex1}
+El código de este proyecto se encuentra en 
+
+\url{https://github.com/samuel-bassols/Comunicacion-distribuida-de-procesos}.
+Se ponen a disposición dos proyectos, el proyecto R del paquete distR y el proyecto de la aplicación \textit{Elixir} DistR. Cada uno se encuentra en la carpeta llamada Elixir y R respectivamente. 
+
+Los códigos fuente del paquete R se encuentran en la carpeta \texttt{/R/distR/R} y los de la aplicación \textit{Elixir} en \texttt{/Elixir/dist\_r/lib} 
+
+En la guía que se presenta en el Anexo~\ref{guia} se muestra cómo instalar y poner en funcionamiento el sistema. 
+\section{Manual de instalación}\label{guia}
+En este Anexo se describen los pasos necesarios para poner en marcha el sistema implementado en este proyecto. Esta instalación se ha probado en una máquina con el sistema operativo Ubuntu 22.04.2 LTS por lo que la instalación de algunas partes puede variar si se utiliza una distribución diferente de Linux.
+\subsection{Instalación de Elixir}
+En esta sección se muestra como instalar la versión 1.14.5 de \textit{Elixir}. Para el manejo de las instalaciones se usa el \textit{version manager} \texttt{asdf}.
+\begin{enumerate}
+    \item Instalar git para poder descargar repositorios.
+    
+    \mintinline{shell}{sudo apt install curl git}
+    \item Descargar \texttt{asdf}. 
+    
+    \mintinline{shell}{git clone https://github.com/asdf-vm/asdf.git ~/.asdf}.
+    \item Añadir el comando \texttt{asdf} al archivo .bashrc. Este archivo se encuentra en el directorio HOME y se le debe añadir la siguiente linea:
+    
+    \mintinline{shell}{. $HOME/.asdf/asdf.sh}.
+    \item Instalar el plugin de \textit{Erlang}.
+    
+    \mintinline{shell}{asdf plugin add erlang}.
+
+
+    \item Instalar \textit{Erlang} 25.3.2.3. Es posible que en el sistema falten algunas dependencias para compilar los archivos de \textit{Erlang}. En este caso, se muestran los paquetes que es necesario instalar en la terminal.
+    
+    \mintinline{shell}{asdf install erlang 25.3.2.3}.
+    \item Instalar el plugin de \textit{Elixir}.
+
+    \mintinline{shell}{asdf plugin add elixir}.
+    \item Instalar \textit{Elixir} 1.14.5-opt-25.
+
+    \mintinline{shell}{asdf install elixir 1.14.5-otp-25}.
+    \item Establecer las versiones instaladas como globales.
+
+    \mintinline{shell}{asdf global elixir 1.14.5-otp-25}.
+    
+    \mintinline{shell}{asdf global erlang 25.3.2.3}.
+
+    \item Comprobar que las versiones de Elixir y Erlang coinciden. La versión de OTP debería de ser la misma cuando se ejecuta la siguiente linea.
+
+    \mintinline{shell}{elixir -v}.
+\end{enumerate}
+
+\subsection{Instalación y configuración de NGINX y el servidor sftp}
+En esta sección se muestra como instalar y configurar el servidor web NGINX. 
+Para instalar NGINX se utiliza el siguiente comando: \mintinline{shell}{sudo apt install nginx}. Una vez instalado se debe configurar el \textit{LoadBalancer}. El archivo de configuración se encuentra en \mintinline{shell}{etc/nginx/sites-available/conf}. En este archivo se debe copiar el texto mostrado en el fragmento de código \ref{nginx}. Para añadir nuevos nodos basta con incluir nuevos servidores en el \textit{Loadbalancer}.
+\\
+Para el servidor sftp se puede usar cualquier configuración de servidor que se desee, mientras permita conexiones desde las máquinas que se vayan a usar para el sistema.
+\subsection{Instalación de R}
+Para instalar R en los nodos de cómputo basta con ejecutar el siguiente comando 
+
+\mintinline{shell}{sudo apt -y install r-base}. Una vez se ha instalado R hay que instalar las dependencias. Primero se debe abrir una terminal R mediante el comando \mintinline{shell}{sudo R} y ejecutar las siguientes lineas:
+
+\mintinline{shell}{install.packages("httr")}
+
+\mintinline{shell}{install.packages("RCurl")}
+
+\mintinline{shell}{install.packages("Rcpp")}
+
+\mintinline{shell}{install.packages("RInside")}
+
+\subsection{Puesta en marcha del sistema}
+Una vez se han instalado todos los componentes explicados anteriormente se puede poner en funcionamiento el sistema. Para ello se debe abrir una terminal y colocarse en el directorio raíz del proyecto \textit{Elixir} y ejecutar la siguiente linea para descargar las dependencias del proyecto.
+
+\mintinline{shell}{mix deps.get}
+
+Y ya, para poner en marcha el sistema se ejecuta la siguiente linea:
+
+\mintinline{shell}{PORT=PORT MAXP=MAXP elixir --name NAME@ADRESS }
+
+\mintinline{shell}{--cookie COOKIE  -S mix phx.server}
+
+Se deben rellenar los campos como se indica a continuación:
+\begin{itemize}
+    \item PORT: Puerto por el que el nodo recibe peticiones.
+    \item MAXP: Número máximo de ejecuciones simultáneas que se permiten en el nodo.
+    \item NAME: Escoger un nombre del nodo.
+    \item ADRESS: Dirección IP del nodo.
+    \item COOKIE: Cookie que debe ser igual en todos los nodos para que se puedan comunicar.
+\end{itemize}
+
+Para indicar los miembros del \textit{pool} de nodos, se deben añadir manualmente al archivo 
+
+\mintinline{shell}{./lib/dist_r/application} en la función de topología como se muestra en el fragmento de código~\ref{topo}. El nombre y dirección de los nodos debe coincidir con el que se declara en la linea de arranque de la aplicación.
+
+Se debe además indicar la configuración correcta del servidor sftp en el archivo \mintinline{shell}{./execute_command} y cuando este se haya modificado, se debe ejecutar el comando \mintinline{shell}{make execute_command}. En este mismo directorio también se encuentra un archivo \texttt{r\_libraries.R} donde se especifican los paquetes que son solicitados por los usuarios del sistema. Se deben previamente instalar estos paquetes antes de incluirlos.
+\\ 
+Una vez se han establecido las distintas configuraciones, se pueden arrancar los nodos definidos en cualquier orden y momento y la conexión entre ellos es automática.
+
+\subsection{Paquete R DistR}
+Debido a que el paquete se encuentra en estado de desarrollo, este debe ser cargado como un proyecto en RStudio abriendo desde este programa el archivo \texttt{distR.Rproj}. Una vez se ha abierto el proyecto, se ejecuta las linea \texttt{devtools::load\_all()} en un programa R y queda cargado el paquete DistR. Con el paquete cargado se puede consultar la ayuda de las funciones del paquete de manera idéntica a la que se utiliza con otras funciones. Se incluye además un archivo de configuración llamado \texttt{configuration.txt} en el que se puede ver un ejemplo de la configuración del entorno del paquete.
